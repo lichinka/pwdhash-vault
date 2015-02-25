@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from pwdhash.generator import PwdHashGenerator
+from pwdhash_vault.generator import PwdHashGenerator
 
 
 

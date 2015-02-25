@@ -11,7 +11,7 @@ def go (pwd_gen):
 
     pwd_gen     the PwdHash generator instance to use.-
     """
-    from pwdhash.platform import copy_to_clipboard
+    from pwdhash_vault.platform import copy_to_clipboard
 
     domain    = raw_input ("For domain: ").strip ( )
     generated = pwd_gen.generate (domain)

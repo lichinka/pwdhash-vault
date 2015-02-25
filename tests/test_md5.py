@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from pwdhash.md5 import HmacMd5
+from pwdhash_vault.md5 import HmacMd5
 
 
 

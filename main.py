@@ -9,7 +9,7 @@ def create_generator ( ):
     user's master password.-
     """
     import getpass
-    from pwdhash.generator import PwdHashGenerator
+    from pwdhash_vault.generator import PwdHashGenerator
 
     #
     # ask the user's master password in order to create a generator
@@ -46,7 +46,7 @@ def main ( ):
         # console interface?
         #
         if sys.argv[1] == '-i':
-            from pwdhash import console
+            from pwdhash_vault import console
 
             generator = create_generator ( )
             console.go (generator)
@@ -58,8 +58,8 @@ def main ( ):
         # start the web interface in a separate process
         #
         from multiprocessing import Process
-        from pwdhash.web import go, PwdHashServer
-        from pwdhash.platform import open_target
+        from pwdhash_vault.web import go, PwdHashServer
+        from pwdhash_vault.platform import open_target
         
         generator = create_generator ( )
         p = Process (target=go, args=(generator,))

@@ -3,8 +3,8 @@ import os
 import sys
 import cherrypy
 
-from pwdhash.db import KeyDatabase, Key
-from pwdhash.platform import copy_to_clipboard
+from pwdhash_vault.db import KeyDatabase, Key
+from pwdhash_vault.platform import copy_to_clipboard
 
 
 
@@ -53,7 +53,7 @@ class PwdHashServer (object):
         #
         # template-rendering environment
         #
-        self.jinja_env = Environment (loader=PackageLoader ('pwdhash',
+        self.jinja_env = Environment (loader=PackageLoader ('pwdhash_vault',
                                                             'templates'))
         #
         # set the security settings on the 'before_finalize' hook point
@@ -95,7 +95,7 @@ class PwdHashServer (object):
         """
         This target generates a PwdHash password.-
         """
-        from pwdhash.platform import copy_to_clipboard
+        from pwdhash_vault.platform import copy_to_clipboard
 
         domain = kwargs['domain']
         generated = self.pwd_gen.generate (domain)

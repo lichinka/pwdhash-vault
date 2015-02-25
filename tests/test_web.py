@@ -1,8 +1,8 @@
 import cherrypy
 from cherrypy.test import helper
 
-from pwdhash.web import PwdHashServer
-from pwdhash.generator import PwdHashGenerator
+from pwdhash_vault.web import PwdHashServer
+from pwdhash_vault.generator import PwdHashGenerator
 
 
 

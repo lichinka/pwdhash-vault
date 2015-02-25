@@ -154,7 +154,7 @@ class PwdHashGenerator (object):
         """
         Returns a newly-generated PwdHash password for the received 'uri'.-
         """
-        from pwdhash.md5 import HmacMd5
+        from pwdhash_vault.md5 import HmacMd5
 
         #
         # get the master password of this generator from the hashed list
