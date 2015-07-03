@@ -19,7 +19,7 @@ class PwdHashServer (object):
     #
     # configuration settings for this server
     #
-    _global_config = {'server.socket_host' : '127.0.0.1',
+    _global_config = {'server.socket_host' : '0.0.0.0',
                       'server.socket_port' : 8080,
                       'server.thread_pool' : 2}
     #
@@ -255,10 +255,10 @@ def go (pwd_gen):
     #d = Daemonizer (cherrypy.engine)
     #d.subscribe ( )
    
-    print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
-                                                    cherrypy.server.socket_port))
     app = PwdHashServer (pwd_gen)
     cherrypy.config.update (PwdHashServer._global_config)
+    print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
+                                                    cherrypy.server.socket_port))
     cherrypy.quickstart    (app,
                             '/',
                             {'/' : PwdHashServer._site_config})
