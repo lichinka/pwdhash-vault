@@ -3,7 +3,7 @@
 
 import os
 import subprocess
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 
@@ -75,10 +75,10 @@ setup (name='pwdhash-vault',
        url='https://github.com/lichinka/pwdhash-vault',
        license='BSD',
        py_modules=['main'],
-       packages=['pwdhash'],
+       packages=['pwdhash_vault'],
        include_package_data=True,
        install_requires=get_requirements ('requirements.txt'),
-       entry_points={ 'console_scripts': [ 'pwdhash = main:main' ] },
+       entry_points={ 'console_scripts': [ 'pwdhash_vault = main:main' ] },
        zip_safe=False,
       )
       
