@@ -4,8 +4,9 @@ FROM python:2-slim
 RUN set -x \
     && apt-get update \
     && apt-get install -y gcc \
-    && apt-get install -y libsqlite3-dev \
-    && apt-get install -y sqlite3=3.8.*
+                          libsqlite3-dev \
+                          sqlite3=3.8.* \
+                          xclip 
 
 # target directory
 ENV     MY_TGT_DIR=/usr/src/pwdhash-vault

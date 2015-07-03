@@ -1,1 +1,1 @@
-docker run -it -p 127.0.0.1:8080:8080 pwdhash-vault-app
+docker run -it -e DISPLAY -v ${HOME}/.Xauthority:/root/.Xauthority --net=host pwdhash-vault-app:latest
