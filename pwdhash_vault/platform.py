@@ -19,6 +19,11 @@ def open_target (tgt):
         # on Linux/Un*x
         #
         open_exe = "xdg-open"
+    else:
+        #
+        # do nothing on other platforms
+        #
+        return
     try:
         pb = subprocess.Popen ([open_exe, tgt],
                                stdout=open("/dev/null", "w"),
