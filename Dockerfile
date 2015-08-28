@@ -3,10 +3,11 @@ FROM python:2-slim
 # make sure the system packages are installed
 RUN set -x \
     && apt-get update \
-    && apt-get install -y gcc \
+    && apt-get install -y gcc            \
                           libsqlite3-dev \
-                          sqlite3=3.8.* \
-                          xclip 
+                          sqlite3=3.8.*  \
+                          xauth          \
+                          xclip
 
 # target directory
 ENV     MY_TGT_DIR=/usr/src/pwdhash-vault
