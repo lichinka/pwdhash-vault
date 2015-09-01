@@ -81,4 +81,4 @@ setup (name='pwdhash-vault',
        entry_points={ 'console_scripts': [ 'pwdhash_vault = main:main' ] },
        zip_safe=False,
       )
-      
+

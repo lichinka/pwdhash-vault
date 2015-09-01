@@ -3,7 +3,7 @@ import os
 import sys
 import cherrypy
 
-from pwdhash_vault.db import KeyDatabase, Key
+from pwdhash_vault.db       import KeyDatabase, Key
 from pwdhash_vault.platform import copy_to_clipboard
 
 
@@ -65,7 +65,7 @@ class PwdHashServer (object):
         # turn off logging to standard output
         #
         cherrypy.log.screen = None
-       
+
         #
         # initialize the database
         #
@@ -245,7 +245,7 @@ def go (pwd_gen):
     """
     Starts the web-server vault:
 
-    pwd_gen     the PwdHash generator the web app will use.-
+    :param pwd_gen: the PwdHash generator the web app will use.-
     """
     from cherrypy.process.plugins import Daemonizer
 
@@ -254,7 +254,7 @@ def go (pwd_gen):
     #
     #d = Daemonizer (cherrypy.engine)
     #d.subscribe ( )
-   
+
     app = PwdHashServer (pwd_gen)
     cherrypy.config.update (PwdHashServer._global_config)
     print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,

@@ -60,18 +60,16 @@ def main ( ):
         from multiprocessing import Process
         from pwdhash_vault.web import go, PwdHashServer
         from pwdhash_vault.platform import open_target
-        
+
         generator = create_generator ( )
         p = Process (target=go, args=(generator,))
         p.start ( )
-
         #
         # display the Vault's home page in a browser
         #
         vault_home = 'http://%s:%s' % (PwdHashServer._global_config['server.socket_host'],
                                        PwdHashServer._global_config['server.socket_port'])
         open_target (vault_home)
-        
         #
         # the Vault's process
         #

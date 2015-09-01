@@ -34,8 +34,8 @@ def open_target (tgt):
     else:
         if pb.returncode != 0:
             logging.warning ("Could not open [%s]" % tgt)
- 
-    
+
+
 
 def copy_to_clipboard (string):
     """
