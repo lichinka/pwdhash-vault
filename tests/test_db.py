@@ -38,7 +38,7 @@ class KeyDatabaseTest (unittest.TestCase):
                 self.assertTrue         (r.avail)
 
 
-    def test_delete_sets_entry_available (self):
+    def test_delete_marks_entry_as_available (self):
         import random
 
         with self.tmp_db.file:

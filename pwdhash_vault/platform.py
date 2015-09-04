@@ -39,7 +39,10 @@ def open_target (tgt):
 
 def copy_to_clipboard (string):
     """
-    Returns 'True' if 'string' was correctly copied to the system's clipboard.-
+    Copies the received string to the system's clipboard.
+
+    :param string: the string that has to be copied;
+    :returns:      True if the string was correctly copied.-
     """
     #
     # an external program is used for copying the password to the clipboard
@@ -56,7 +59,6 @@ def copy_to_clipboard (string):
         # on Linux/Un*x
         #
         clip_copy_exe = "xclip"
-
     try:
         pb = subprocess.Popen(clip_copy_exe,
                               stdin=subprocess.PIPE,

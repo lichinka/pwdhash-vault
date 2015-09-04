@@ -14,23 +14,8 @@ current_dir = os.path.dirname (os.path.abspath (__file__))
 
 class PwdHashServer (object):
     """
-    A small server for the PwdHash Vault web interface.-
+    A small web server for the PwdHash Vault interface.-
     """
-    #
-    # configuration settings for this server
-    #
-    _global_config = {'server.socket_host' : '0.0.0.0',
-                      'server.socket_port' : 8080,
-                      'server.thread_pool' : 2}
-    #
-    # site-specific configuration
-    #
-    _site_config = {'tools.encode.encoding'  : 'utf-8',
-                    'tools.secureheaders.on' : True,
-                    'tools.staticdir.on'     : True,
-                    'tools.staticdir.dir'    : '%s/%s' % (current_dir, "static")}
-
-
     def _secure_headers (self):
         """
         These settings provide enhanced security to the served pages.-
@@ -95,19 +80,27 @@ class PwdHashServer (object):
         """
         This target generates a PwdHash password.-
         """
-        from pwdhash_vault.platform import copy_to_clipboard
+        #from pwdhash_vault.platform import copy_to_clipboard
+        from selenium import webdriver
 
-        domain = kwargs['domain']
+        domain    = kwargs['domain']
         generated = self.pwd_gen.generate (domain)
 
-        copied_to_clipboard = copy_to_clipboard (generated) 
+        browser = webdriver.Firefox ( )
 
-        if copied_to_clipboard:
-            msg = "Password ready"
-        else:
-            msg = generated
-        del generated
+        browser.get (domain)
+        browser.find_element_by_id ('it_txtPwd').send_keys (generated)
+
+        #copied_to_clipboard = copy_to_clipboard (generated) 
+
+        #if copied_to_clipboard:
+        #    msg = "Password ready"
+        #else:
+        #    msg = generated
+        #del generated
+
         return self.index (msg)
+
 
     @cherrypy.expose
     def pick_image (self, query, start=0):
@@ -115,14 +108,14 @@ class PwdHashServer (object):
         Displays images from a Google image search, letting the
         user select one as the icon for a new entry:
 
-            query   the query string sent to Google images;
-            start   the query parameter for pagination.-
+        :param query: the query string sent to Google images;
+        :param start: the query parameter for pagination.-
         """
         import json
         import time
         import urllib
         import requests
- 
+
         BASE_URL    = 'https://ajax.googleapis.com/ajax/services/search/images'
         BASE_URL   += '?v=1.0&q=%s' % query
         BASE_URL   += '&start=%d'
@@ -160,7 +153,7 @@ class PwdHashServer (object):
             # we get delivered four images per page
             #
             start += 4
-             
+
             # Be nice to Google and they'll be nice back :)
             time.sleep (0.5)
         #
@@ -176,7 +169,7 @@ class PwdHashServer (object):
                             img_urls=img_urls,
                             next_start=next_start,
                             prev_start=prev_start)
-     
+
 
     @cherrypy.expose
     def index (self, msg=None):
@@ -247,19 +240,13 @@ def go (pwd_gen):
 
     :param pwd_gen: the PwdHash generator the web app will use.-
     """
-    from cherrypy.process.plugins import Daemonizer
-
-    #
-    # start the vault as a daemon in the background
-    #
-    #d = Daemonizer (cherrypy.engine)
-    #d.subscribe ( )
+    from pwdhash_vault import PWDVAULT_CONFIG
 
     app = PwdHashServer (pwd_gen)
-    cherrypy.config.update (PwdHashServer._global_config)
+    cherrypy.config.update (PWDVAULT_CONFIG['cherrypy']['global'])
     print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
                                                     cherrypy.server.socket_port))
-    cherrypy.quickstart    (app,
-                            '/',
-                            {'/' : PwdHashServer._site_config})
+    cherrypy.quickstart (app,
+                         '/',
+                         {'/' : PWDVAULT_CONFIG['cherrypy']['site']})
 

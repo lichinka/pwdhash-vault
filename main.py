@@ -21,14 +21,20 @@ def create_generator ( ):
     return generator
 
 
-def print_usage ( ):
-    """
-    Prints out usage message.-
-    """
-    print ("Usage: %s [-i]" % sys.argv[0])
-    print ("Implements Stanford's PwdHash with console and web interfaces.")
-    print
-    print ("-i    starts PwdHash in interactive mode.-")
+def get_usage_message ( ):
+    return """
+Implements Stanford's PwdHash with console and web interfaces
+
+Usage:
+    %s [--config=<FILE>] [--no-web]
+    %s (-h | --help | --version)
+
+Options:
+    -c, --config=<FILE> reads configuration from FILE [default: $HOME/.pwdvault/config.json]
+    -h, --help          show this screen and exit
+    -n, --no-web        starts in interactive mode
+        --version       display version information and exit
+    """ % (sys.argv[0], sys.argv[0])
 
 
 
@@ -36,40 +42,49 @@ def main ( ):
     """
     PwdHash entry point.-
     """
+    import pwdhash_vault
+    from   docopt        import docopt
+
     #
     # check command-line parameters
     #
-    start_obj = None
+    args = docopt (get_usage_message ( ),
+                   version = pwdhash_vault.PWDVAULT_VERSION)
+    #
+    # read the configuration file in
+    #
+    try:
+        pwdhash_vault.load_configuration (args['--config'])
 
-    if len (sys.argv) > 1:
-        #
-        # console interface?
-        #
-        if sys.argv[1] == '-i':
-            from pwdhash_vault import console
+    exception IOError:
+        sys.stderr.write ("Configuration file '%s' is not accessible" %
+                          args['--config'])
+        sys.exit (1)
+    #
+    # interactive mode?
+    #
+    if args['--no-web']:
+        from pwdhash_vault import console
 
-            generator = create_generator ( )
-            console.go (generator)
-        else:
-            print_usage ( )
-            sys.exit (1)
+        generator = create_generator ( )
+        console.go (generator)
     else:
         #
         # start the web interface in a separate process
         #
         from multiprocessing import Process
-        from pwdhash_vault.web import go, PwdHashServer
-        from pwdhash_vault.platform import open_target
+        from pwdhash_vault   import web
+        from pwdhash_vault   import platform
 
         generator = create_generator ( )
-        p = Process (target=go, args=(generator,))
+        p = Process (target=web.go, args=(generator,))
         p.start ( )
         #
         # display the Vault's home page in a browser
         #
-        vault_home = 'http://%s:%s' % (PwdHashServer._global_config['server.socket_host'],
-                                       PwdHashServer._global_config['server.socket_port'])
-        open_target (vault_home)
+        vault_home = 'http://%s:%s' % (web.PwdHashServer._global_config['server.socket_host'],
+                                       web.PwdHashServer._global_config['server.socket_port'])
+        platform.open_target (vault_home)
         #
         # the Vault's process
         #

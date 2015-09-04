@@ -86,16 +86,22 @@ class Key (SQLObject):
     #
     # using alternateID will automatically create a byName() method
     #
-    name   = StringCol (length      = 256,
-                        varchar     = False,
-                        alternateID = True,
-                        unique      = True)
-    domain = StringCol (length  = 512,
-                        varchar = False)
-    image  = StringCol (length  = 512,
-                        varchar = False)
-    avail  = BoolCol   (default = True,
-                        notNone = True)
+    name      = StringCol (length      = 256,
+                           varchar     = False,
+                           alternateID = True,
+                           unique      = True)
+    domain    = StringCol (length  = 512,
+                           varchar = False)
+    usr       = StringCol (length  = 128,
+                           varchar = False)
+    usr_field = StringCol (length  = 128,
+                           varchar = False)
+    pwd_field = StringCol (length  = 128,
+                           varchar = False)
+    image     = StringCol (length  = 512,
+                           varchar = False)
+    avail     = BoolCol   (default = True,
+                           notNone = True)
 
 
     def _init (self, id, connection=None, selectResults=None):

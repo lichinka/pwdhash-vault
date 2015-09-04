@@ -19,7 +19,7 @@ def go (pwd_gen):
     #
     # an external program is used for copying the password to the clipboard
     #
-    copied_to_clipboard = copy_to_clipboard (generated) 
+    copied_to_clipboard = copy_to_clipboard (generated)
 
     if copied_to_clipboard:
         print ("Password copied to clipboard.")
