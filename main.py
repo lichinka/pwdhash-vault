@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
+import logging
+import pwdhash_vault
 
 
 
@@ -9,13 +11,13 @@ def create_generator ( ):
     user's master password.-
     """
     import getpass
-    from pwdhash_vault.generator import PwdHashGenerator
+    from   pwdhash_vault.generator import PwdHashGenerator
 
     #
     # ask the user's master password in order to create a generator
     #
-    password = unicode (getpass.getpass (">>> Please enter your password <<<\n"),
-                        'utf8')
+    password  = unicode (getpass.getpass (">>> Please enter your password <<<\n"),
+                         'utf8')
     generator = PwdHashGenerator (password)
     del password
     return generator
@@ -26,15 +28,15 @@ def get_usage_message ( ):
 Implements Stanford's PwdHash with console and web interfaces
 
 Usage:
-    %s [--config=<FILE>] [--no-web]
+    %s [--vault=<DIR>] [--no-web]
     %s (-h | --help | --version)
 
 Options:
-    -c, --config=<FILE> reads configuration from FILE [default: $HOME/.pwdvault/config.json]
-    -h, --help          show this screen and exit
-    -n, --no-web        starts in interactive mode
-        --version       display version information and exit
-    """ % (sys.argv[0], sys.argv[0])
+    -h, --help        show this screen and exit
+    -n, --no-web      starts in interactive mode
+    -v, --vault=<DIR> uses the password vault at DIR [default: %s]
+        --version     display version information and exit
+    """ % (sys.argv[0], sys.argv[0], pwdhash_vault.PWDVAULT_DIR)
 
 
 
@@ -42,8 +44,8 @@ def main ( ):
     """
     PwdHash entry point.-
     """
-    import pwdhash_vault
-    from   docopt        import docopt
+    from os.path import isdir
+    from docopt  import docopt
 
     #
     # check command-line parameters
@@ -51,22 +53,31 @@ def main ( ):
     args = docopt (get_usage_message ( ),
                    version = pwdhash_vault.PWDVAULT_VERSION)
     #
+    # check exitence of the vault directory
+    #
+    if args['--vault']:
+        pwdhash_vault.PWDVAULT_DIR = args['--vault']
+    if not isdir (pwdhash_vault.PWDVAULT_DIR):
+        logging.warning ("No vault found at '%s'" % pwdhash_vault.PWDVAULT_DIR)
+        create = raw_input ("Do you want to create an empty one? (y/N)")
+        if create == 'y':
+            pwdhash_vault.init_vault (pwdhash_vault.PWDVAULT_DIR)
+        else:
+            sys.exit (1)
+    #
     # read the configuration file in
     #
-    try:
-        pwdhash_vault.load_configuration (args['--config'])
-
-    exception IOError:
-        sys.stderr.write ("Configuration file '%s' is not accessible" %
-                          args['--config'])
-        sys.exit (1)
+    pwdhash_vault.load_configuration ( )
+    #
+    # create a password generator
+    #
+    generator = create_generator ( )
     #
     # interactive mode?
     #
     if args['--no-web']:
         from pwdhash_vault import console
 
-        generator = create_generator ( )
         console.go (generator)
     else:
         #
@@ -76,14 +87,14 @@ def main ( ):
         from pwdhash_vault   import web
         from pwdhash_vault   import platform
 
-        generator = create_generator ( )
         p = Process (target=web.go, args=(generator,))
         p.start ( )
         #
         # display the Vault's home page in a browser
         #
-        vault_home = 'http://%s:%s' % (web.PwdHashServer._global_config['server.socket_host'],
-                                       web.PwdHashServer._global_config['server.socket_port'])
+        server_cfg = pwdhash_vault.PWDVAULT_CONFIG['cherrypy']['global']['server']
+        vault_home = 'http://%s:%s' % (server_cfg['socket_host'],
+                                       server_cfg['socket_port'])
         platform.open_target (vault_home)
         #
         # the Vault's process

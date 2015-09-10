@@ -3,12 +3,9 @@ import os
 import sys
 import cherrypy
 
+from pwdhash_vault          import PWDVAULT_DIR, PWDVAULT_DB
 from pwdhash_vault.db       import KeyDatabase, Key
 from pwdhash_vault.platform import copy_to_clipboard
-
-
-
-current_dir = os.path.dirname (os.path.abspath (__file__))
 
 
 
@@ -20,9 +17,9 @@ class PwdHashServer (object):
         """
         These settings provide enhanced security to the served pages.-
         """
-        headers = cherrypy.response.headers
-        headers['X-Frame-Options'] = 'DENY'
-        headers['X-XSS-Protection'] = '1; mode=block'
+        headers                            = cherrypy.response.headers
+        headers['X-Frame-Options']         = 'DENY'
+        headers['X-XSS-Protection']        = '1; mode=block'
         headers['Content-Security-Policy'] = "default-src='self'"
 
 
@@ -54,7 +51,9 @@ class PwdHashServer (object):
         #
         # initialize the database
         #
-        self.db = KeyDatabase (current_dir)
+        self.db = KeyDatabase (PWDVAULT_DIR,
+                               PWDVAULT_DB)
+        self.db.connect ( )
 
 
     @cherrypy.expose

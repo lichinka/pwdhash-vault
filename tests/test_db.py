@@ -35,6 +35,12 @@ class KeyDatabaseTest (unittest.TestCase):
                                          Key.sqlmeta.columns['domain'].length)
                 self.assertEqual        (len (r.image.strip ( )),
                                          Key.sqlmeta.columns['image'].length)
+                self.assertEqual        (len (r.usr.strip ( )),
+                                         Key.sqlmeta.columns['usr'].length)
+                self.assertEqual        (len (r.usr_field.strip ( )),
+                                         Key.sqlmeta.columns['usr_field'].length)
+                self.assertEqual        (len (r.pwd_field.strip ( )),
+                                         Key.sqlmeta.columns['pwd_field'].length)
                 self.assertTrue         (r.avail)
 
 
@@ -65,9 +71,12 @@ class KeyDatabaseTest (unittest.TestCase):
 
     def test_cannot_insert_more_keys (self):
         with self.assertRaises (ValueError):
-            key = Key (name   = "pepe",
-                       domain = "pepe.me",
-                       image  = None)
+            key = Key (name      = "pepe",
+                       domain    = "pepe.me",
+                       image     = None,
+                       pwd_field = None,
+                       usr       = None,
+                       usr_field = None)
         rows = Key.select ( )
         self.assertEqual (rows.count ( ),
                           KeyDatabase.MAX_ENTRIES_NUM)

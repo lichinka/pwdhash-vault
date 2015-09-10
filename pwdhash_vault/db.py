@@ -15,7 +15,7 @@ class KeyDatabase (object):
     #
     MAX_ENTRIES_NUM = 128
 
-    def __init__ (self, directory, db_name='pwdvault.db'):
+    def __init__ (self, directory, db_name):
         """
         Initializes the database, using 'cur_dir' as the base directory
 
@@ -74,7 +74,8 @@ class KeyDatabase (object):
         #
         # the table containing all keys
         #
-        Key.createTable (ifNotExists=create)
+        if create:
+            Key.createTable (ifNotExists=True)
         Key._connection.debug = False
 
 
@@ -90,18 +91,18 @@ class Key (SQLObject):
                            varchar     = False,
                            alternateID = True,
                            unique      = True)
+    avail     = BoolCol   (default = True,
+                           notNone = True)
     domain    = StringCol (length  = 512,
+                           varchar = False)
+    image     = StringCol (length  = 512,
+                           varchar = False)
+    pwd_field = StringCol (length  = 128,
                            varchar = False)
     usr       = StringCol (length  = 128,
                            varchar = False)
     usr_field = StringCol (length  = 128,
                            varchar = False)
-    pwd_field = StringCol (length  = 128,
-                           varchar = False)
-    image     = StringCol (length  = 512,
-                           varchar = False)
-    avail     = BoolCol   (default = True,
-                           notNone = True)
 
 
     def _init (self, id, connection=None, selectResults=None):
