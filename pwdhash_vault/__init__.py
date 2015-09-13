@@ -42,9 +42,10 @@ def load_configuration ( ):
     """
     Loads the configuration from PWDVAULT_CONFIG_FILE into PWDVAULT_CONFIG.-
     """
+    global PWDVAULT_CONFIG
     try:
         with open ('%s/%s' % (PWDVAULT_DIR, PWDVAULT_CONFIG_FILE), 'r') as conf:
-            PWDVAULT_CONFIG = json.load (conf)
+            PWDVAULT_CONFIG = dict (**json.load (conf))
     except IOError:
         logging.error ("Cannot read configuration from '%s'" % PWDVAULT_CONFIG_FILE)
 
@@ -71,13 +72,20 @@ def init_vault (directory):
     from os               import mkdir
     from pwdhash_vault.db import KeyDatabase
 
+    global PWDVAULT_DIR
     logging.info ("Initializing empty vault into '%s' ..." % directory)
 
-    mkdir (directory)
+    try:
+        mkdir (directory)
+    except OSError:
+        #
+        # directory exists, continue anyway
+        #
+        logging.warning ("Directory exists, will continue anyway")
+
     db = KeyDatabase   (directory,
                         PWDVAULT_DB)
     db.create          ( )
-    save_configuration ('%s/%s' % (directory,
-                                   PWDVAULT_CONFIG_FILE))
-    PWDVAULT_DIR = directory
+    save_configuration ( )
+    PWDVAULT_DIR = str (directory)
 

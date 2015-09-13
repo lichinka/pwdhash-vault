@@ -63,16 +63,17 @@ class PwdHashServerTest (helper.CPWebCase):
 
 
     def test_only_not_available_entries_are_displayed (self):
-        from   tempfile import mkdtemp
-        import pwdhash_vault
+        from tempfile      import mkdtemp
+        from pwdhash_vault import db, init_vault
 
         tmp_vault = mkdtemp ( )
-        pwdhash_vault.init_vault (tmp_vault)
+        init_vault (tmp_vault)
 
-        expected_entries = Key.select ( ).orderBy ('name')
-        print (expected_entries)
+        expected         = db.Key.select ( ).orderBy ('name')
+        expected_entries = [entry.name for entry in expected]
         self._get_url ('/',
                        expected_entries)
+
 
     def test_pick_image (self):
         """
