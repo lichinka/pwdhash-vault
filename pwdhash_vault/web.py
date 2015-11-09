@@ -242,10 +242,11 @@ def go (pwd_gen):
     from pwdhash_vault import PWDVAULT_CONFIG
 
     app = PwdHashServer (pwd_gen)
-    cherrypy.config.update (PWDVAULT_CONFIG['cherrypy']['global'])
+    cherrypy.tree.mount  (app,
+                          '/',
+                          config = PWDVAULT_CONFIG['cherrypy'])
     print ("Starting PwdHash Vault at %s:%s ..." % (cherrypy.server.socket_host,
                                                     cherrypy.server.socket_port))
-    cherrypy.quickstart (app,
-                         '/',
-                         {'/' : PWDVAULT_CONFIG['cherrypy']['site']})
+    cherrypy.engine.start ( )
+    cherrypy.engine.block ( )
 

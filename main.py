@@ -59,7 +59,7 @@ def main ( ):
         pwdhash_vault.PWDVAULT_DIR = args['--vault']
     if not isdir (pwdhash_vault.PWDVAULT_DIR):
         logging.warning ("No vault found at '%s'" % pwdhash_vault.PWDVAULT_DIR)
-        create = raw_input ("Do you want to create an empty one? (y/N)")
+        create = raw_input ("Do you want to create an empty one? (y/N) ")
         if create == 'y':
             pwdhash_vault.init_vault (pwdhash_vault.PWDVAULT_DIR)
         else:

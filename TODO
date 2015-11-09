@@ -1,0 +1,5 @@
+- Use entry ID for hashing, thus allowing per entry password change without chaging the master password.
+- Per entry rewrite rules.
+- Split the authentication mechanism with another device.
+- Challenge connection authentication with "pairing-like" question from PC <-> device, with TTL token used for encrypting the current password-generating session 
+- Display feeback after entering the master password to give the user a hint about the password being correctly typed or not.

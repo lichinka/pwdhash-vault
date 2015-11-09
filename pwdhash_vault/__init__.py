@@ -31,8 +31,11 @@ PWDVAULT_CONFIG = {
             "tools" : {
                 "encode.encoding"  : "utf-8",
                 "secureheaders.on" : "True",
-                "staticdir.on"     : "True",
             }
+        },
+        "/"      : {
+            "tools.staticdir.on"     : "True",
+            "tools.staticdir.dir"    : "static",
         }
     }
 }
@@ -42,10 +45,19 @@ def load_configuration ( ):
     """
     Loads the configuration from PWDVAULT_CONFIG_FILE into PWDVAULT_CONFIG.-
     """
+    import os
+
     global PWDVAULT_CONFIG
     try:
         with open ('%s/%s' % (PWDVAULT_DIR, PWDVAULT_CONFIG_FILE), 'r') as conf:
             PWDVAULT_CONFIG = dict (**json.load (conf))
+        #
+        # add the full path to the 'static' directory
+        #
+        #PWDVAULT_CONFIG['cherrypy']['/']['tools.staticdir.dir'] = '%s/%s' % (os.path.realpath (__file__),
+        #                                                                             'static')
+        pass
+
     except IOError:
         logging.error ("Cannot read configuration from '%s'" % PWDVAULT_CONFIG_FILE)
 
